@@ -152,13 +152,12 @@ Unit testing packages seem to have less consensus. Packages include:
 * ensurer[@bache_ensurer_2015]
 * assertive[@cotton_assertive_2016]
 * checkmate[@lang_checkmate_2020]
-* testit[@xie__aut_testit_2020]
+* testit[@xie__aut_testit_2019]
 * pointblank[@iannone_pointblank_2020]
 * RUnit
 * and more...
 
-For this demo we will use 
-
+More research on our team should be done to evaulate all these options
 
 
 
