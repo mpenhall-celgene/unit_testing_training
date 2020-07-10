@@ -27,7 +27,7 @@ data quality in addition to software/code.
 In this document we will review a few librarie and packages across two languages, R
 and Python. Part of the rason to include Python in this context is to demonstrate
 well developed and utilized unti testing framework. Then we will apply those
-concept to R, which, in the author's opinion, is significantly under-developed
+concept to R, which in the author's opinion, is significantly under-developed[@bryan_vignette_2017]
 and the mainstream commonly used package for it leave a lot to be desired.
 
 Unit testing in a classical defintion should be used to test individual components
@@ -50,7 +50,7 @@ For Python unit testing there are a few different libraries for unit testing:
 
 Unit testing is built on the concept of `assert` in many programming languages. An assert
 statement normally will take a conditional expresssion. such as `1 == 2` and will stop
-the code with an `AssertionError` in Python. This is similar function to R's `assert`
+the code with an `AssertionError` in Python. This is similar function to R's `stopifnot`
 function, ultimating stopping execution. Pytest using assert as a way to set conditions for a
 passing or failing return on a testing function.
 
@@ -116,9 +116,51 @@ FAILED tests/test_basics.py::test_max_int - assert inf == 0
 ============================== 1 failed, 1 passed in 0.03s ==============================
 ```
 
-As a general test, any test you write should be able to failable, otherwise it is not useful.
+Any test you write should be able to failable, otherwise it is not useful.
 This seems obvious in this example, but in more complex algorthims, that can be challenging to
 built.
+
+Any conditional expression can be used so as an advance example (see the code sample for 
+loading data):
+```python
+import pandas as pd
+
+# Create some fixtures, objects that can be used to test something
+df = pd.read_parquet("data/random_norms.parquet")
+
+def test_df_columns():
+	expect_column_subset = ["a", "b"]
+
+	# let's use the power of applied math to check columns, not expecting c
+	assert set(df.columns).issubset(expect_column_subset)
+
+def test_df_for_empties():
+	assert any([
+        len(df[column_name].dropna()) == len(df[column_name]) 
+        for column_name in list(df.columns)])
+
+```
+
+# R
+
+Unit testing packages seem to have less consensus. Packages include:
+
+* stopifnot[@r_development_core-team_r_nodate]
+* testthat [@wickham_testthat_2020][^1 must use devtools::install_github("hadley/testthat#594") for now]
+* assertthat[@wickham_assertthat_2019]
+* assertr[@fischetti_assertr_2020]
+* ensurer[@bache_ensurer_2015]
+* assertive[@cotton_assertive_2016]
+* checkmate[@lang_checkmate_2020]
+* testit[@xie__aut_testit_2020]
+* pointblank[@iannone_pointblank_2020]
+* RUnit
+* and more...
+
+For this demo we will use 
+
+
+
 
 \newpage
 # References
