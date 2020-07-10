@@ -1,0 +1,124 @@
+---
+title: "Unit Testing for Data Utilization and Management"
+author: "Michael Penhallegon"
+output: pdf_document
+bibliography: "links/references.bib"
+csl: links/american-medical-association.csl
+nocite: |
+  @bioconducter_unit_nodate
+---
+
+Introduction
+============
+
+As the complexity of software and scrpt development continues
+withing the Seattle KSR Team, there is a chance to strengten software engineering
+concepts to improve quality, increase productivity and drive to more
+design-thinking/behavior driven development
+
+Unit testing is a software engineering concept to write test for individual
+components of code to check conditions, demostrate base functionality and to
+codify software requirements. While in more "pure" and theoretical applications,
+unit tests are seen to confirm invariants and codify mathematical-proof concept,
+unit tests in pragramtic practice can work well in a grounds-up iterative development
+style. Finally, unit test can become part of a toolset of data testing to further
+data quality in addition to software/code.
+
+In this document we will review a few librarie and packages across two languages, R
+and Python. Part of the rason to include Python in this context is to demonstrate
+well developed and utilized unti testing framework. Then we will apply those
+concept to R, which, in the author's opinion, is significantly under-developed
+and the mainstream commonly used package for it leave a lot to be desired.
+
+Unit testing in a classical defintion should be used to test individual components
+or units of code. Itergration testing, testing entire system/applications and
+the intergration between that system and other software, is a complentary concept
+and similar package/libraries cen be used to intergrate test. Pragmatically, in
+the context of Knowledge Science Research, both can be useful and concorent.
+
+Python Unit Testing
+===================
+
+For Python unit testing there are a few different libraries for unit testing:
+
+- unittest -- included in the standard libary
+- pytest
+
+...and quite a few others. For this demo, the focus will be on pytest.
+
+## Writing a Basic Test
+
+Unit testing is built on the concept of `assert` in many programming languages. An assert
+statement normally will take a conditional expresssion. such as `1 == 2` and will stop
+the code with an `AssertionError` in Python. This is similar function to R's `assert`
+function, ultimating stopping execution. Pytest using assert as a way to set conditions for a
+passing or failing return on a testing function.
+
+As an example, write a `plus4` function that adds 4 to any number inputted into the function:
+```python
+def plus4(x):
+	return 4 + x
+```
+
+for a first step in a testing suite, a series of a related tests, just test that inputting 2
+`plus4` returns 6 (2 + 4 = 6). Like:
+```python
+import pytest
+def test_plus4():
+	assert plus4(2) == 6
+```
+
+Then run your tests by:
+
+```bash
+python -m pytest
+```
+
+will return:
+```
+================================== test session starts ==================================
+platform linux -- Python 3.8.3, pytest-5.4.3, py-1.9.0, pluggy-0.13.1
+rootdir: /home/crimson/Documents/develop/unit_test_training/python, inifile: pytest.ini
+collected 1 item                                                                        
+
+tests/test_basics.py .                                                            [100%]
+
+=================================== 1 passed in 0.01s ===================================
+```
+
+This is basic but not super useful, so instead, let's look at an edge case, in this case
+infinity, `math.inf`. We will write a test we know should fail in this implementation:
+
+```python
+import math
+
+def test_inf_plus4():
+	assert plus4(math.inf) == 0
+```
+
+when pytest is run, the result will include a failure:
+```bash
+[...]
+tests/test_basics.py .F                                                           [100%]
+
+======================================= FAILURES ========================================
+_____________________________________ test_max_int ______________________________________
+
+    def test_max_int():
+>       assert plus4(math.inf) == 0
+E       assert inf == 0
+E        +  where inf = plus4(inf)
+E        +    where inf = math.inf
+
+tests/test_basics.py:9: AssertionError
+================================ short test summary info ================================
+FAILED tests/test_basics.py::test_max_int - assert inf == 0
+============================== 1 failed, 1 passed in 0.03s ==============================
+```
+
+As a general test, any test you write should be able to failable, otherwise it is not useful.
+This seems obvious in this example, but in more complex algorthims, that can be challenging to
+built.
+
+\newpage
+# References
